@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates an EC2 instance to run a static website application deployed with Nginex Web Server
+   
+Resources:
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      GroupName: HTTP-SSH
+      Tags:
+        - Key: Name
+          Value: HTTP-SSH
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  SSD2GB:
+    Type: "AWS::EC2::Volume"
+    Properties:
+      AvailabilityZone: !GetAtt KenNginexCFInstance.AvailabilityZone
+      Size: 2
+      Tags:
+        - Key: Name
+          Value: SSD
+      VolumeType: gp2
+
+  MountPoint:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      InstanceId: !Ref KenNginexCFInstance
+      VolumeId: !Ref SSD2GB
+      Device: /dev/sdf
+
+  NginexCFTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateName: Nginex-EC2-Template
+      LaunchTemplateData:
+        ImageId: ami-0c94855ba95c71c99
+        InstanceType: t2.micro
+        UserData: 
+          Fn::Base64:
+            !Sub |
+              #! /bin/bash
+
+              yum update -y
+              amazon-linux-extras install nginx1.12
+              yum install wget -y
+              chkconfig nginx on
+              cd /usr/share/nginx/html
+              chmod o+w /usr/share/nginx/html
+              rm index.html
+              wget https://raw.githubusercontent.com/awsdevopsteam/route-53/master/index.html
+              wget https://raw.githubusercontent.com/awsdevopsteam/route-53/master/ken.jpg
+              service nginx start
+              sleep 60
+              mkfs -t ext4 /dev/xvdf
+              mkdir /mnt/2nd-vol/
+              echo "/dev/xvdf       /mnt/2nd-vol   ext4    defaults,nofail 0       2" >> /etc/fstab
+              mount -a
+
+  KenNginexCFInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: baris
+      SecurityGroupIds:
+        - !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Nginex-EC2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref NginexCFTemplate
+        Version: !GetAtt NginexCFTemplate.LatestVersionNumber             
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the first EC2 instance
+    Value: !Ref KenNginexCFInstance
+  PublicDNS:
+    Description: Public DNS Name of the EC2 instance
+    Value: !Join 
+      - "://"
+      - - "http"
+        - !GetAtt 
+          - KenNginexCFInstance
+          - PublicDnsName
+  PublicIP:
+    Description: Public IP address of the EC2 instance
+    Value: !GetAtt 
+      - KenNginexCFInstance
+      - PublicIp

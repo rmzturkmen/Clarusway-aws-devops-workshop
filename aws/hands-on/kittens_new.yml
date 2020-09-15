@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates an EC2 instance to run a static website application deployed with Apache Web Server
+  
+Resources:
+  KittensCarouselStaticWebsiteCFInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c94855ba95c71c99
+      InstanceType: t2.micro
+      KeyName: virginia_key
+      SecurityGroups:
+        - SSH and HTTP
+      Tags:
+        - Key: Name
+          Value: Kittens_Apache
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            yum update -y
+            yum install httpd -y
+            chmod -R 777 /var/www/html
+            DATE_TIME=`date`
+            cd /var/www/html
+            wget https://raw.githubusercontent.com/GustavoYoung/Clarusway_aws_devops_workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html
+            wget https://raw.githubusercontent.com/GustavoYoung/Clarusway_aws_devops_workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat0.jpg
+            wget https://raw.githubusercontent.com/GustavoYoung/Clarusway_aws_devops_workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat1.jpg
+            wget https://raw.githubusercontent.com/GustavoYoung/Clarusway_aws_devops_workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat2.jpg
+            systemctl start httpd
+            systemctl enable httpd
+  
+Outputs:
+  InstanceId:
+    Description: InstanceId of the first EC2 instance
+    Value: !Ref KittensCarouselStaticWebsiteCFInstance
+  PublicDNS:
+    Description: Public DNS Name of the EC2 instance
+    Value: !GetAtt 
+      - KittensCarouselStaticWebsiteCFInstance
+      - PublicDnsName
+  PublicIP:
+    Description: Public IP address of the EC2 instance
+    Value: !GetAtt 
+      - KittensCarouselStaticWebsiteCFInstance
+      - PublicIp
