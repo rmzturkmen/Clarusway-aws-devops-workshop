@@ -30,9 +30,9 @@ def converter_post():
                    minute * (1000*60)) // (1000)
             result = (f'{hour} hour/s'*(hour != 0) + f' {minute} minute/s'*(minute != 0) +
                       f' {sec} second/s' * (sec != 0) or f'just {num} millisecond/s' * (numalpha < 1000))
-            return render_template("result.html", developer_name="Ramazan", milliseconds=numalpha, not_valid=True, result=result)
+            return render_template("result.html", developer_name="Ramazan", milliseconds=numalpha, not_valid=False, result=result)
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
+    #app.run(host='0.0.0.0', port=80)
