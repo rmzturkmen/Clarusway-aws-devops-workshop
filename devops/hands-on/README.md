@@ -38,3 +38,8 @@ List of hands-on trainings within DevOps as follows;
 
 - [Hands-on Jenkins-03 : Building Jenkins Pipeline on Amazon Linux 2 AWS EC2 Instance](./jenkins/jenkins-03-building-jenkins-pipeline)
 
+- [Hands-on Jenkins-04 : Install & Configure Tomcat on Amazon Linux 2 AWS EC2 Instances](./jenkins/jenkins-04-install-configure-tomcat)
+
+- [Hands-on Jenkins-05 : Building Jenkins Pipelines and Deploying Applications on Amazon Linux 2 AWS EC2 Instances](./jenkins/jenkins-05-deployment-to-staging-environments)
+
+
