@@ -1,4 +1,5 @@
 # Hands-on Ansible-06 : Using Roles
+
 The purpose of this hands-on training is to give students knowledge of basic Ansible skills.
 
 ## Learning Outcomes
@@ -6,33 +7,30 @@ The purpose of this hands-on training is to give students knowledge of basic Ans
 At the end of this hands-on training, students will be able to;
 
 - Explain what is Ansible role
-- Learn how to create, find and use a role.  
+- Learn how to create, find and use a role.
 
 ## Outline
 
 - Part 1 - Install Ansible
 
-- Part 2 - Using Ansible Roles 
+- Part 2 - Using Ansible Roles
 
 - Part 3 - Using Ansible Roles from Ansible Galaxy
 
-
-
 ## Part 1 - Install Ansible
 
-
 - Spin-up 3 Amazon Linux 2 instances and name them as:
-    1. control node -->(SSH PORT 22)
-    2. node1 ----> (SSH PORT 22, HTTP PORT 80)
-    3. node2 ----> (SSH PORT 22, HTTP PORT 80)
 
+  1. control node -->(SSH PORT 22)
+  2. node1 ----> (SSH PORT 22, HTTP PORT 80)
+  3. node2 ----> (SSH PORT 22, HTTP PORT 80)
 
 - Connect to the control node via SSH and run the following commands.
 
-- Run the commands below to install Python3 and Ansible. 
+- Run the commands below to install Python3 and Ansible.
 
 ```bash
-$ sudo yum install -y python3 
+$ sudo yum install -y python3
 ```
 
 ```bash
@@ -45,22 +43,20 @@ $ pip3 install --user ansible
 $ ansible --version
 ```
 
-
 - Run the command below to transfer your pem key to your Ansible Controller Node.
 
 ```bash
 $ scp -i <PATH-TO-PEM-FILE> <PATH-TO-PEM-FILE> ec2-user@<CONTROLLER-NODE-IP>:/home/ec2-user
 ```
 
+- Make a directory named `working-with-roles` under the home directory and cd into it.
 
-- Make a directory named ```working-with-roles``` under the home directory and cd into it.
-
-```bash 
+```bash
 $ mkdir working-with-roles
 $ cd working-with-roles
 ```
 
-- Create a file named ```inventory.txt``` with the command below.
+- Create a file named `inventory.txt` with the command below.
 
 ```bash
 $ vi inventory.txt
@@ -76,7 +72,8 @@ db_server   ansible_host=<YOUR-DB-SERVER-IP>   ansible_user=ec2-user  ansible_ss
 web_server  ansible_host=<YOUR-WEB-SERVER-IP>  ansible_user=ec2-user  ansible_ssh_private_key_file=~/<YOUR-PEM-FILE>
 test_server  ansible_host=<YOUR-WEB-SERVER-IP>  ansible_user=ec2-user  ansible_ssh_private_key_file=~/<YOUR-PEM-FILE>
 ```
-- Create file named ```ansible.cfg``` under the the ```working-with-roles``` directory.
+
+- Create file named `ansible.cfg` under the the `working-with-roles` directory.
 
 ```cfg
 [defaults]
@@ -85,8 +82,7 @@ inventory=inventory.txt
 interpreter_python=auto_silent
 ```
 
-
-- Create a file named ```ping-playbook.yml``` and paste the content below.
+- Create a file named `ping-playbook.yml` and paste the content below.
 
 ```bash
 $ touch ping-playbook.yml
@@ -108,14 +104,11 @@ $ ansible-playbook ping-playbook.yml
 
 - Explain the output of the above command.
 
-
-
 ## Part 2 - Using Ansible Roles
 
 - Install ngnix server and restart it with using Ansible roles.
 
 ansible-galaxy init /home/ec2-user/ansible/roles/apache
-
 
 cd /home/ec2-user/ansible/roles/apache
 ll
@@ -149,14 +142,15 @@ vi tasks/main.yml
 cd /home/ec2-user/working-with-roles/
 vi role1.yml
 
-
 ---
+
 - name: Install and Start apache
-  hosts: _test_server
+  hosts: \_test_server
   become: yes
   roles:
-    - apache
-```
+  - apache
+
+````
 
 
 ## Part 3 - Using Ansible Roles from Ansible Galaxy
@@ -175,9 +169,10 @@ vi role1.yml
 
 ```bash
 $ ansible-galaxy search nginx
-```
+````
 
 Stdout:
+
 ```
 Found 1494 roles matching your search. Showing first 1000.
 
@@ -191,15 +186,15 @@ Found 1494 roles matching your search. Showing first 1000.
  1nfinitum.php                                                PHP installation role.
  2goobers.jellyfin                                            Install Jellyfin on Debian.
  2kloc.trellis-monit                                          Install and configure Monit service in Trellis.
- ```
-
-
- - there are lots of. Lets filter them.
-
- ```bash
- $ ansible-galaxy search nginx --platform EL
 ```
-"EL" for centos 
+
+- there are lots of. Lets filter them.
+
+```bash
+$ ansible-galaxy search nginx --platform EL
+```
+
+"EL" for centos
 
 - Lets go more specific :
 
@@ -208,10 +203,11 @@ $ ansible-galaxy search nginx --platform EL | grep geerl
 
 Stdout:
 ```
-geerlingguy.nginx                                            Nginx installation for Linux, FreeBSD and OpenBSD.
-geerlingguy.php                                              PHP for RedHat/CentOS/Fedora/Debian/Ubuntu.
-geerlingguy.pimpmylog                                        Pimp my Log installation for Linux
-geerlingguy.varnish                                          Varnish for Linux.
+
+geerlingguy.nginx Nginx installation for Linux, FreeBSD and OpenBSD.
+geerlingguy.php PHP for RedHat/CentOS/Fedora/Debian/Ubuntu.
+geerlingguy.pimpmylog Pimp my Log installation for Linux
+geerlingguy.varnish Varnish for Linux.
 
 ```
 - Install it:
@@ -220,11 +216,13 @@ $ ansible-galaxy install geerlingguy.nginx
 
 Stdout:
 ```
+
 - downloading role 'nginx', owned by geerlingguy
 - downloading role from https://github.com/geerlingguy/ansible-role-nginx/archive/2.8.0.tar.gz
 - extracting geerlingguy.nginx to /home/ec2-user/.ansible/roles/geerlingguy.nginx
 - geerlingguy.nginx (2.8.0) was installed successfully
-```
+
+````
 
 - Inspect the role:
 
@@ -284,7 +282,7 @@ $ vi main.yml
     mode: 0644
   notify:
     - reload nginx
-```
+````
 
 - # use it in playbook:
 
@@ -311,23 +309,19 @@ $ ansible-playbook playbook-nginx.yml
 $ ansible-galaxy list
 
 Stdout:
+
 ```
 - geerlingguy.elasticsearch, 5.0.0
 - geerlingguy.mysql, 3.3.0
 ```
 
-- 
-$ ansible-config dump | grep ROLE
+- $ ansible-config dump | grep ROLE
 
 Stdout:
+
 ```
 DEFAULT_PRIVATE_ROLE_VARS(default) = False
 DEFAULT_ROLES_PATH(default) = [u'/home/ercan/.ansible/roles', u'/usr/share/ansible/roles', u'/etc/ansible/roles']
 GALAXY_ROLE_SKELETON(default) = None
 GALAXY_ROLE_SKELETON_IGNORE(default) = ['^.git$', '^.*/.git_keep$']
 ```
-
-
-
-
-
