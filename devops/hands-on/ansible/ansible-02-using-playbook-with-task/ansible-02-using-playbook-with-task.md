@@ -16,11 +16,10 @@ At the end of the this hands-on training, students will be able to;
 
 ## Part 1 - Install Ansible
 
-
 - Create 2 Amazon Linux 2 and 1 Ubuntu EC2 instances. Then name the instances as below. For Security Group, allow ssh and http when creating EC2.
-1-control node
-2-node1
-3-node2(ubuntu)
+  1-control node
+  2-node1
+  3-node2(ubuntu)
 
 - Connect to the control node with SSH and run the following commands.
 
@@ -28,6 +27,7 @@ At the end of the this hands-on training, students will be able to;
 sudo yum update -y
 sudo amazon-linux-extras install ansible2
 ```
+
 ### Confirm Installation
 
 - To confirm the successful installation of Ansible. You can run the following command.
@@ -35,6 +35,7 @@ sudo amazon-linux-extras install ansible2
 ```bash
 $ ansible --version
 ```
+
 ### Configure Ansible on AWS EC2
 
 - Connect to the control node and for this basic inventory, edit /etc/ansible/hosts, and add a few remote systems (manage nodes) to the end of the file. For this example, use the IP addresses of the servers.
@@ -55,7 +56,7 @@ node2 ansible_host=<node2_ip> ansible_user=ubuntu
 ansible_ssh_private_key_file=/home/ec2-user/<pem file>
 ```
 
-- Edit /etc/ansible/ansible.cfg as adding below. 
+- Edit /etc/ansible/ansible.cfg as adding below.
 
 ```bash
 $ vim ansible.cfg
@@ -90,26 +91,25 @@ $ scp -i <pem file> <pem file> ec2-user@<public DNS name of the control node>:/h
 ansible-playbook playbook1.yml
 ```
 
-- Create a text file named "testfile1" and write "Hello Clarusway" with using vim. Then create a yaml file name "playbook2.yml" and send the "testfile1" to the hosts. 
+- Create a text file named "testfile1" and write "Hello Clarusway" with using vim. Then create a yaml file name "playbook2.yml" and send the "testfile1" to the hosts.
 
 ```yml
 ---
 - name: Copy for linux
   hosts: webservers
   tasks:
-   - name: Copy your file to the webservers
-     copy:
-       src: /home/ec2-user/testfile1
-       dest: /home/ec2-user/testfile1
+    - name: Copy your file to the webservers
+      copy:
+        src: /home/ec2-user/testfile1
+        dest: /home/ec2-user/testfile1
 
 - name: Copy for ubuntu
   hosts: ubuntuservers
   tasks:
-   - name: Copy your file to the ubuntuservers
-     copy:
-       src: /home/ec2-user/testfile1
-       dest: /home/ubuntu/testfile1
-
+    - name: Copy your file to the ubuntuservers
+      copy:
+        src: /home/ec2-user/testfile1
+        dest: /home/ubuntu/testfile1
 ```
 
 - Run the yaml file.
@@ -118,11 +118,11 @@ ansible-playbook playbook1.yml
 ansible-playbook playbook2.yml
 ```
 
-- Connect the nodes with SSH and check if the text files are copied or not. 
+- Connect the nodes with SSH and check if the text files are copied or not.
 
 - Create a yaml file named playbook3.yml as below.
 
-```bash
+````bash
 $ vim playbook3.yml
 
 ```yml
@@ -154,13 +154,14 @@ $ vim playbook3.yml
 
    - name: Create a new text file
      shell: "echo Hello World > /home/ec2-user/testfile3"
-```
+````
 
 - Run the yaml file.
 
 ```bash
 ansible-playbook playbook3.yml
 ```
+
 - Connect the node1 with SSH and check if the text files are there.
 
 - Install Apache server with "playbook4.yml". After the installation, check if the Apache server is reachable from the browser.
@@ -191,6 +192,7 @@ $ vim playbook4.yml
        name: apache2
        state: latest
 ```
+
 - Run the yaml file.
 
 ```bash
@@ -231,7 +233,7 @@ $ vim playbook5.yml
 $ ansible-playbook -b playbook5.yml
 ```
 
-- This time, install Apache and wget together with playbook6.yml. After the installation, enter the IP-address of node2 to the browser and show the Apache server. Then, connect node1 with SSH and check if "wget and apache server" are running. 
+- This time, install Apache and wget together with playbook6.yml. After the installation, enter the IP-address of node2 to the browser and show the Apache server. Then, connect node1 with SSH and check if "wget and apache server" are running.
 
 ```bash
 vim playbook6.yml
@@ -311,7 +313,7 @@ vim playbook7.yml
 ansible-playbook -b playbook7.yml
 ```
 
-- Using ansible loop and conditional, create users with playbook8.yml. 
+- Using ansible loop and conditional, create users with playbook8.yml.
 
 ```bash
 vi playbook8.yml
