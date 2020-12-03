@@ -24,10 +24,9 @@ At the end of the this hands-on training, students will be able to;
 
 ## Part 1 - Setting up the Kubernetes Cluster
 
-- Launch a Kubernetes Cluster of Ubuntu 20.04 with two nodes (one master, one worker) using the [Cloudformation Template to Create Kubernetes Cluster](./cfn-template-to-create-k8s-cluster.yml). *Note: Once the master node up and running, worker node automatically joins the cluster.*
+- Launch a Kubernetes Cluster of Ubuntu 20.04 with two nodes (one master, one worker) using the [Cloudformation Template to Create Kubernetes Cluster](./cfn-template-to-create-k8s-cluster.yml). _Note: Once the master node up and running, worker node automatically joins the cluster._
 
->*Note: If you have problem with kubernetes cluster, you can use this link for lesson.*
->https://www.katacoda.com/courses/kubernetes/playground
+> _Note: If you have problem with kubernetes cluster, you can use this link for lesson._ >https://www.katacoda.com/courses/kubernetes/playground
 
 - Check if Kubernetes is running and nodes are ready.
 
@@ -40,14 +39,14 @@ kubectl get no
 
 - Show the names and short names of the supported API resources as shown in the example:
 
-|NAME|SHORTNAMES|
-|----|----------|
-|deployments|deploy
-|events     |ev
-|endpoints  |ep
-|nodes      |no
-|pods       |po
-|services   |svc
+| NAME        | SHORTNAMES |
+| ----------- | ---------- |
+| deployments | deploy     |
+| events      | ev         |
+| endpoints   | ep         |
+| nodes       | no         |
+| pods        | po         |
+| services    | svc        |
 
 ```bash
 kubectl api-resources
@@ -72,7 +71,7 @@ kubectl get nodes
 ```bash
 kubectl explain pods
 ```
-  
+
 - Create yaml file named `mypod.yaml` and explain fields of it.
 
 ```yaml
@@ -84,10 +83,10 @@ metadata:
     app: nginx
 spec:
   containers:
-  - name: mynginx
-    image: nginx:1.19
-    ports:
-    - containerPort: 80
+    - name: mynginx
+      image: nginx:1.19
+      ports:
+        - containerPort: 80
 ```
 
 - Create a pod with `kubectl create` command.
@@ -103,7 +102,7 @@ kubectl get pods
 ```
 
 - List pods in `ps output format` with more information (such as node name).
-  
+
 ```bash
 kubectl get pods -o wide
 ```
@@ -115,7 +114,7 @@ kubectl describe pods/nginx-pod
 ```
 
 - Show details of pod in `yaml format`.
-  
+
 ```bash
 kubectl get pods/nginx-pod -o yaml
 ```
@@ -157,10 +156,10 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: mynginx
-        image: nginx:1.19
-        ports:
-        - containerPort: 80
+        - name: mynginx
+          image: nginx:1.19
+          ports:
+            - containerPort: 80
 ```
 
 - Create the replicaset with `kubectl apply` command.
@@ -176,7 +175,7 @@ kubectl get replicaset
 ```
 
 - List pods with more information.
-  
+
 ```bash
 kubectl get pods -o wide
 ```
@@ -195,9 +194,9 @@ kubectl delete replicaset <replicaset-name>
 
 #### Pod Selector
 
-The .spec.selector field is a label selector. 
+The .spec.selector field is a label selector.
 
-The .spec.selector field and .spec.template.metadata field must be same. There are additional issues related this subject like louse coupling, but we discuss this on service object.  
+The .spec.selector field and .spec.template.metadata field must be same. There are additional issues related this subject like louse coupling, but we discuss this on service object.
 
 ### Deployments
 
@@ -227,14 +226,14 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.19
-        ports:
-        - containerPort: 80
+        - name: nginx
+          image: nginx:1.19
+          ports:
+            - containerPort: 80
 ```
 
 - Create the deployment with `kubectl apply` command.
-  
+
 ```bash
 kubectl apply -f mydeployment.yaml
 ```
@@ -246,7 +245,7 @@ kubectl get deployments
 ```
 
 - List pods with more information.
-  
+
 ```bash
 kubectl get pods -o wide
 ```
@@ -347,10 +346,10 @@ spec:
         app: container-info
     spec:
       containers:
-      - name: container-info
-        image: clarusways/container-info:1.0
-        ports:
-        - containerPort: 80
+        - name: container-info
+          image: clarusways/container-info:1.0
+          ports:
+            - containerPort: 80
 ```
 
 - Create the deployment with `kubectl apply` command.
@@ -433,16 +432,19 @@ metadata:
 - Change the `metadata.annotations.kubernetes.io/change-cause` and `spec.template.spec.containers.image` fields as below.
 
 ```yaml
-...
-...
-    kubernetes.io/change-cause: kubectl set image deploy clarus-deploy container-info=clarusways/container-info:3.0
-...
-...
-    spec:
-      containers:
-      - image: clarusways/container-info:3.0
-...
-...
+
+---
+
+---
+kubernetes.io/change-cause: kubectl set image deploy clarus-deploy container-info=clarusways/container-info:3.0
+---
+
+---
+spec:
+  containers:
+    - image: clarusways/container-info:3.0
+---
+
 ```
 
 - Show the rollout history.
@@ -500,7 +502,7 @@ kubectl delete deploy -l app=container-info
 
 ## Part 4 - Namespaces in Kubernetes
 
-- List the current namespaces in a cluster using and explain them. *Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called `namespaces`.*
+- List the current namespaces in a cluster using and explain them. _Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called `namespaces`._
 
 ```bash
 kubectl get namespace
@@ -511,17 +513,21 @@ kube-public       Active   118m
 kube-system       Active   118m
 ```
 
->### default
->The default namespace for objects with no other namespace
+> ### default
+>
+> The default namespace for objects with no other namespace
 
->### kube-system
->The namespace for objects created by the Kubernetes system
+> ### kube-system
+>
+> The namespace for objects created by the Kubernetes system
 
->### kube-public
->This namespace is created automatically and is readable by all users (including those not authenticated). This >namespace is mostly reserved for cluster usage, in case that some resources should be visible and readable >publicly throughout the whole cluster. The public aspect of this namespace is only a convention, not a >requirement.
+> ### kube-public
+>
+> This namespace is created automatically and is readable by all users (including those not authenticated). This >namespace is mostly reserved for cluster usage, in case that some resources should be visible and readable >publicly throughout the whole cluster. The public aspect of this namespace is only a convention, not a >requirement.
 
->### kube-node-lease
->This namespace for the lease objects associated with each node which improves the performance of the node  heartbeats as the cluster scales.
+> ### kube-node-lease
+>
+> This namespace for the lease objects associated with each node which improves the performance of the node heartbeats as the cluster scales.
 
 - Create a new YAML file called `my-namespace.yaml` with the following content.
 
