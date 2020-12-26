@@ -76,13 +76,13 @@ $ scp -i <pem file> <pem file> ec2-user@<public DNS name of the control node>:/h
 
 - Create a yaml file named "playbook1.yml" and make sure all our hosts are up and running.
 
-```bash
+```yml
 ---
 - name: Test Connectivity
   hosts: all
   tasks:
-   - name: Ping test
-     ping:
+    - name: Ping test
+      ping:
 ```
 
 - Run the yaml file.
