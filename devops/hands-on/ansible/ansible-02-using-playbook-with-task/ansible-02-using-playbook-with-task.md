@@ -122,39 +122,41 @@ ansible-playbook playbook2.yml
 
 - Create a yaml file named playbook3.yml as below.
 
-````bash
+```bash
 $ vim playbook3.yml
+```
 
 ```yml
+---
 - name: Copy for linux
   hosts: webservers
   tasks:
-   - name: Copy your file to the webservers
-     copy:
-       src: /home/ec2-user/testfile1
-       dest: /home/ec2-user/testfile1
-       mode: u+rw,g-wx,o-rwx
+    - name: Copy your file to the webservers
+      copy:
+        src: /home/ec2-user/testfile1
+        dest: /home/ec2-user/testfile1
+        mode: u+rw,g-wx,o-rwx
 
 - name: Copy for ubuntu
   hosts: ubuntuservers
   tasks:
-   - name: Copy your file to the ubuntuservers
-     copy:
-       src: /home/ec2-user/testfile1
-       dest: /home/ubuntu/testfile1
-       mode: u+rw,g-wx,o-rwx
+    - name: Copy your file to the ubuntuservers
+      copy:
+        src: /home/ec2-user/testfile1
+        dest: /home/ubuntu/testfile1
+        mode: u+rw,g-wx,o-rwx
 
 - name: Copy for node1
   hosts: node1
   tasks:
-   - name: Copy using inline content
-     copy:
-       content: '# This file was moved to /etc/ansible/testfile1'
-       dest: /home/ec2-user/testfile2
+    - name: Copy using inline content
+      copy:
+        content: "# This file was moved to /etc/ansible/testfile1"
+        dest: /home/ec2-user/testfile2
 
-   - name: Create a new text file
-     shell: "echo Hello World > /home/ec2-user/testfile3"
-````
+    - name: Create a new text file
+      shell: "echo Hello World > /home/ec2-user/testfile3"
+```
 
 - Run the yaml file.
 
@@ -171,26 +173,28 @@ $ ansible-doc yum
 $ ansible-doc apt
 
 $ vim playbook4.yml
+```
 
+```yml
 ---
 - name: Apache installation for webservers
   hosts: webservers
   tasks:
-   - name: install the latest version of Apache
-     yum:
-       name: httpd
-       state: latest
+    - name: install the latest version of Apache
+      yum:
+        name: httpd
+        state: latest
 
-   - name: start Apache
-     shell: "service httpd start"
+    - name: start Apache
+      shell: "service httpd start"
 
 - name: Apache installation for ubuntuservers
   hosts: ubuntuservers
   tasks:
-   - name: install the latest version of Apache
-     apt:
-       name: apache2
-       state: latest
+    - name: install the latest version of Apache
+      apt:
+        name: apache2
+        state: latest
 ```
 
 - Run the yaml file.
@@ -204,27 +208,29 @@ $ ansible-playbook -b playbook4.yml   # Run the command again and show the chang
 
 ```bash
 $ vim playbook5.yml
+```
 
+```yml
 ---
 - name: Remove Apache from webservers
   hosts: webservers
   tasks:
-   - name: Remove Apache
-     yum:
-       name: httpd
-       state: absent
+    - name: Remove Apache
+      yum:
+        name: httpd
+        state: absent
 
 - name: Remove Apache from ubuntuservers
   hosts: ubuntuservers
   tasks:
-   - name: Remove Apache
-     apt:
-       name: apache2
-       state: absent
-   - name: Remove unwanted Apache2 packages from the system
-     apt:
-       autoremove: yes
-       purge: yes
+    - name: Remove Apache
+      apt:
+        name: apache2
+        state: absent
+    - name: Remove unwanted Apache2 packages from the system
+      apt:
+        autoremove: yes
+        purge: yes
 ```
 
 - Run the yaml file.
@@ -237,26 +243,28 @@ $ ansible-playbook -b playbook5.yml
 
 ```bash
 vim playbook6.yml
+```
 
+```yml
 ---
 - name: play 4
   hosts: ubuntuservers
   tasks:
-   - name: installing apache
-     apt:
-       name: apache2
-       state: latest
+    - name: installing apache
+      apt:
+        name: apache2
+        state: latest
 
-   - name: index.html
-     copy:
-       content: "<h1>Hello Clarusway</h1>"
-       dest: /var/www/html/index.html
+    - name: index.html
+      copy:
+        content: "<h1>Hello Clarusway</h1>"
+        dest: /var/www/html/index.html
 
-   - name: restart apache2
-     service:
-       name: apache2
-       state: restarted
-       enabled: yes
+    - name: restart apache2
+      service:
+        name: apache2
+        state: restarted
+        enabled: yes
 
 - name: play 5
   hosts: webservers
@@ -280,31 +288,33 @@ ansible-playbook -b playbook6.yml
 
 ```bash
 vim playbook7.yml
+```
 
+```yml
 ---
 - name: play 6
   hosts: ubuntuservers
   tasks:
-   - name: Uninstalling Apache
-     apt:
-       name: apache2
-       state: absent
-       update_cache: yes
-   - name: Remove unwanted Apache2 packages
-     apt:
-       autoremove: yes
-       purge: yes
+    - name: Uninstalling Apache
+      apt:
+        name: apache2
+        state: absent
+        update_cache: yes
+    - name: Remove unwanted Apache2 packages
+      apt:
+        autoremove: yes
+        purge: yes
 
 - name: play 7
   hosts: webservers
   tasks:
-   - name: removing apache and wget
-     yum:
-       pkg: "{{ item }}"
-       state: absent
-     with_items:
-       - httpd
-       - wget
+    - name: removing apache and wget
+      yum:
+        pkg: "{{ item }}"
+        state: absent
+      with_items:
+        - httpd
+        - wget
 ```
 
 - Run the yaml file.
@@ -319,7 +329,7 @@ ansible-playbook -b playbook7.yml
 vi playbook8.yml
 ```
 
-```bash
+```yml
 ---
 - name: Create users
   hosts: "*"
