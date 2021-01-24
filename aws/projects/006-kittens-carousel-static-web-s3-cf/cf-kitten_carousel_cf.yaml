@@ -18,6 +18,8 @@ Resources:
       BucketName: !Ref KittensDomainName
       WebsiteConfiguration: 
          IndexDocument: index.html
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: True
 
   KittensBucketPolicy:
     Type: AWS::S3::BucketPolicy
